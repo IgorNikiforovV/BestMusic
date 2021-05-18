@@ -1,0 +1,6 @@
+framework module Pods_BestMusic {
+  umbrella header "Pods-BestMusic-umbrella.h"
+
+  export *
+  module * { export * }
+}

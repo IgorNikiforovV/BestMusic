@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Alamofire
 
 struct TrackModel {
     let trackName: String
@@ -14,12 +15,12 @@ struct TrackModel {
 
 class SearchViewController: UITableViewController {
 
-    private let searchController = UISearchController(searchResultsController: nil)
+    private let networkService = NetworkService()
 
-    private let tracks = [TrackModel(trackName: "Save Your Tears", artistName: "The Weeknd"),
-                          TrackModel(trackName: "Diamonds", artistName: "Sam Smith"),
-                          TrackModel(trackName: "Regardless", artistName: "RAYE&Rudimental")
-    ]
+    private let searchController = UISearchController(searchResultsController: nil)
+    private var timer: Timer?
+
+    private var tracks = [Track]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +47,6 @@ extension SearchViewController {
         cell.textLabel?.numberOfLines = 2
         cell.textLabel?.text = tracks[indexPath.item].artistName
         let track = tracks[indexPath.item]
-        cell.textLabel?.text = "\(track.trackName)\n\(track.artistName)"
         cell.imageView?.image = UIImage(named: "trackImage")
         return cell
     }
@@ -58,9 +58,11 @@ extension SearchViewController {
 extension SearchViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { _ in
+            self.networkService.fetchTracks(searchText: searchText)
+        })
     }
-
 }
 
 // MARK: Private methods -
