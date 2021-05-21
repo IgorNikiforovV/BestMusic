@@ -13,7 +13,7 @@ struct TrackModel {
     let artistName: String
 }
 
-class SearchViewController: UITableViewController {
+class SearchMusicViewController: UITableViewController {
 
     private let networkService = NetworkService()
 
@@ -35,7 +35,7 @@ class SearchViewController: UITableViewController {
 
 // MARK: UITableViewDataSource -
 
-extension SearchViewController {
+extension SearchMusicViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         tracks.count
@@ -55,19 +55,22 @@ extension SearchViewController {
 
 // MARK: UISearchBarDelegate -
 
-extension SearchViewController: UISearchBarDelegate {
+extension SearchMusicViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { _ in
-            self.networkService.fetchTracks(searchText: searchText)
+            self.networkService.fetchTracks(searchText: searchText) { [weak self] searchResults in
+                self?.tracks = searchResults?.results ?? []
+                self?.tableView.reloadData()
+            }
         })
     }
 }
 
 // MARK: Private methods -
 
-private extension SearchViewController {
+private extension SearchMusicViewController {
 
     func configureTableView() {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cellId")
