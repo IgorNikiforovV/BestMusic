@@ -20,9 +20,11 @@ class SearchViewController: UIViewController, SearchDisplayLogic {
     // MARK: @IBOutlets
 
     @IBOutlet private weak var tableView: UITableView!
-
     private let searchController = UISearchController(searchResultsController: nil)
-    
+
+    private var searchViewModel = SearchViewModel(cells: [])
+    private var timer: Timer?
+
     // MARK: Object lifecycle
 
 
@@ -59,8 +61,9 @@ class SearchViewController: UIViewController, SearchDisplayLogic {
         switch viewModel {
         case .some:
             print("viewController .some")
-        case .displayTracks:
-            print("viewController .displayTracks")
+        case .displayTracks(let searchViewModel):
+            self.searchViewModel = searchViewModel
+            tableView.reloadData()
         }
     }
     
@@ -71,13 +74,26 @@ class SearchViewController: UIViewController, SearchDisplayLogic {
 extension SearchViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        3
+        searchViewModel.cells.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath)
-        cell.textLabel?.text = "indexPath: \(indexPath)"
+        let cell = tableView.dequeueReusableCell(withIdentifier: TrackCell.reuseId, for: indexPath) as! TrackCell
+        let cellViewModel = searchViewModel.cells[indexPath.item]
+//        cell.textLabel?.text = "\(cellViewModel.trackName)\n\(cellViewModel.artistName)"
+//        cell.textLabel?.numberOfLines = 2
+        cell.trackImageView.image = #imageLiteral(resourceName: "trackImage")
         return cell
+    }
+
+}
+
+// MARK: - UITableViewDelegate
+
+extension SearchViewController: UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        84
     }
 
 }
@@ -85,8 +101,10 @@ extension SearchViewController: UITableViewDataSource {
 extension SearchViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
-        interactor?.makeRequest(request: .getTracks)
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { [weak self] _ in
+            self?.interactor?.makeRequest(request: .getTracks(searchTerm: searchText))
+        })
     }
 
 }
@@ -95,12 +113,15 @@ private extension SearchViewController {
 
     func setupSearchBar() {
         searchController.searchBar.delegate = self
+        searchController.obscuresBackgroundDuringPresentation = false
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
+
     }
 
     func setupTableView() {
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cellId")
+        let nib = UINib(nibName: TrackCell.reuseId, bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: TrackCell.reuseId)
     }
 
 }

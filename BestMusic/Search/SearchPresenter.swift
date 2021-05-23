@@ -19,10 +19,25 @@ class SearchPresenter: SearchPresentationLogic {
         switch response {
         case .some:
             print("presenter .some")
-        case .presentTracks:
-            print("presenter .presentTracks")
-            viewController?.displayData(viewModel: .displayTracks)
+        case .presentTracks(let searchResults):
+            let cells = searchResults?.results.map{ cellViewModel(from: $0) } ?? []
+            let searchViewModel = SearchViewModel(cells: cells)
+            viewController?.displayData(viewModel: .displayTracks(searchViewModel: searchViewModel))
         }
     }
     
+}
+
+// MARK: Private methods
+
+private extension SearchPresenter {
+
+    private func cellViewModel(from track: Track) -> SearchViewModel.Cell {
+        SearchViewModel.Cell(iconUrlString: track.artworkUrl100,
+                             trackName: track.trackName ?? "Unknown track",
+                             collectionName: track.collectionName ?? "No collection",
+                             artistName: track.artistName ?? "Unknown author",
+                             previewUrl: track.previewUrl)
+    }
+
 }
