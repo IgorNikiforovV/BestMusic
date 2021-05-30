@@ -56,6 +56,7 @@ class SearchViewController: UIViewController, SearchDisplayLogic {
 
         setupTableView()
         setupSearchBar()
+        searchBar(searchController.searchBar, textDidChange: "Billie")
     }
     
     func displayData(viewModel: Search.Model.ViewModel.ViewModelData) {

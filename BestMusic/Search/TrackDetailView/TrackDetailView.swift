@@ -31,7 +31,7 @@ class TrackDetailView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        trackImageView.backgroundColor = .green
+        configureTrackImageView()
     }
 
 }
@@ -49,6 +49,8 @@ extension TrackDetailView {
         let string600 = viewModel.iconUrlString?.replacingOccurrences(of: "100x100", with: "600x600")
         guard let url = URL(string: string600 ?? "") else { return }
         trackImageView.sd_setImage(with: url, completed: nil)
+
+        monitorStartTime()
     }
 
 }
@@ -56,6 +58,22 @@ extension TrackDetailView {
 // MARK: Private methods
 
 private extension TrackDetailView {
+
+    // MARK: - Configure
+
+    func configureTrackImageView() {
+        trackImageView.layer.cornerRadius = 5
+        setTrackImageView()
+    }
+
+    // MARK: - Setup
+
+    func setTrackImageView() {
+        let scale: CGFloat = 0.8
+        trackImageView.transform = CGAffineTransform(scaleX: scale, y: scale)
+    }
+
+    // MARK: - @IBAction
 
     @IBAction func drugDownButtonTapped(_ sender: UIButton) {
         removeFromSuperview()
@@ -79,9 +97,11 @@ private extension TrackDetailView {
         if player.timeControlStatus == .paused {
             player.play()
             playPauseButton.setImage(UIImage(named: "TrackDetai/pause"), for: .normal)
+            enlageTrackImageView()
         } else {
             player.pause()
             playPauseButton.setImage(UIImage(named: "TrackDetai/play"), for: .normal)
+            reduceTrackImageView()
         }
     }
     
@@ -90,6 +110,42 @@ private extension TrackDetailView {
         let playerItem = AVPlayerItem(url: url)
         player.replaceCurrentItem(with: playerItem)
         player.play()
+    }
+
+    // MARK: - Time setup
+
+    func monitorStartTime() {
+        let time = CMTimeMake(value: 1, timescale: 3)
+        let times = [NSValue(time: time)]
+        player.addBoundaryTimeObserver(forTimes: times, queue: .main) { [weak self] in
+            self?.enlageTrackImageView()
+        }
+    }
+
+    // MARK: - Animations
+
+    func enlageTrackImageView() {
+        UIView.animate(withDuration: 1,
+                       delay: 0,
+                       usingSpringWithDamping: 0.5,
+                       initialSpringVelocity: 1,
+                       options: .curveEaseOut,
+                       animations: {
+                        self.trackImageView.transform = .identity
+                       },
+                       completion: nil)
+    }
+
+    func reduceTrackImageView() {
+        UIView.animate(withDuration: 1,
+                       delay: 0,
+                       usingSpringWithDamping: 0.5,
+                       initialSpringVelocity: 1,
+                       options: .curveEaseOut,
+                       animations: {
+                        self.setTrackImageView()
+                       },
+                       completion: nil)
     }
 
 }
