@@ -125,26 +125,24 @@ private extension TrackDetailView {
     // MARK: - Animations
 
     func enlageTrackImageView() {
-        UIView.animate(withDuration: 1,
-                       delay: 0,
-                       usingSpringWithDamping: 0.5,
-                       initialSpringVelocity: 1,
-                       options: .curveEaseOut,
-                       animations: {
-                        self.trackImageView.transform = .identity
-                       },
-                       completion: nil)
+        strtAnimation {
+            self.trackImageView.transform = .identity
+        }
     }
 
     func reduceTrackImageView() {
+        strtAnimation {
+            self.setTrackImageView()
+        }
+    }
+
+    func strtAnimation(animations: @escaping () -> Void) {
         UIView.animate(withDuration: 1,
                        delay: 0,
                        usingSpringWithDamping: 0.5,
                        initialSpringVelocity: 1,
                        options: .curveEaseOut,
-                       animations: {
-                        self.setTrackImageView()
-                       },
+                       animations: animations,
                        completion: nil)
     }
 
