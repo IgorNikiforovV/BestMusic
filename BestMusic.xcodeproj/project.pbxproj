@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7815A61217A7C6AE5031B3B7 /* Pods_BestMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFD234EFB7C0E84E26D15056 /* Pods_BestMusic.framework */; };
+		AC8955422664AD6200A71420 /* CMTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8955412664AD6200A71420 /* CMTime.swift */; };
 		AC8E6E86264E41A9009A2A20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8E6E85264E41A9009A2A20 /* AppDelegate.swift */; };
 		AC8E6E88264E41A9009A2A20 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8E6E87264E41A9009A2A20 /* SceneDelegate.swift */; };
 		AC8E6E8A264E41A9009A2A20 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8E6E89264E41A9009A2A20 /* ViewController.swift */; };
@@ -35,6 +36,7 @@
 
 /* Begin PBXFileReference section */
 		6A344C1A05AD56CDB2731303 /* Pods-BestMusic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BestMusic.release.xcconfig"; path = "Target Support Files/Pods-BestMusic/Pods-BestMusic.release.xcconfig"; sourceTree = "<group>"; };
+		AC8955412664AD6200A71420 /* CMTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMTime.swift; sourceTree = "<group>"; };
 		AC8E6E82264E41A9009A2A20 /* BestMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BestMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC8E6E85264E41A9009A2A20 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AC8E6E87264E41A9009A2A20 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 			isa = PBXGroup;
 			children = (
 				ACF5137126562B3100911885 /* UIViewController + Storyboard.swift */,
+				AC8955412664AD6200A71420 /* CMTime.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -339,6 +342,7 @@
 				AC8E6E88264E41A9009A2A20 /* SceneDelegate.swift in Sources */,
 				ACF513672656263200911885 /* SearchPresenter.swift in Sources */,
 				AC953A4C265E11010077BBE6 /* TrackDetailView.swift in Sources */,
+				AC8955422664AD6200A71420 /* CMTime.swift in Sources */,
 				AC930B15265389FE00DE5B2D /* NetworkService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
