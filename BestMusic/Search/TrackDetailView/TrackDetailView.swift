@@ -45,7 +45,7 @@ extension TrackDetailView {
         authorTitleLabel.text = viewModel.artistName
 
         playTrack(previewUrl: viewModel.previewUrl)
-        observeOLayerCurrentTime()
+        observePlayerCurrentTime()
         let string600 = viewModel.iconUrlString?.replacingOccurrences(of: "100x100", with: "600x600")
         guard let url = URL(string: string600 ?? "") else { return }
         trackImageView.sd_setImage(with: url, completed: nil)
@@ -80,10 +80,18 @@ private extension TrackDetailView {
     }
 
     @IBAction func currentTimeSliderValueChanged(_ sender: UISlider) {
+        guard let duration = player.currentItem?.duration else { return }
+        let percentage = currentTimeSlider.value
+        let durationInSeconds = CMTimeGetSeconds(duration)
+        let seekTimeInSeconds = Float64(percentage) * durationInSeconds
+        let seekTime = CMTimeMakeWithSeconds(seekTimeInSeconds, preferredTimescale: 1)
+
+        player.seek(to: seekTime)
     }
 
 
     @IBAction func volumeSliderValueChanged(_ sender: UISlider) {
+        player.volume = volumeSlider.value
     }
 
     @IBAction func previousTrackButtonTapped(_ sender: UIButton) {
@@ -122,14 +130,24 @@ private extension TrackDetailView {
         }
     }
 
-    func observeOLayerCurrentTime() {
+    func observePlayerCurrentTime() {
         let interval = CMTimeMake(value: 1, timescale: 2)
         player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
             self?.currentTimeLabel.text = time.toDisplayString()
             let durationTime = self?.player.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1)
             let currentDurationText = (durationTime - time).toDisplayString()
             self?.durationTimeLabel.text = "-\(currentDurationText)"
+
+            self?.updateCurrentTimeSlider()
         }
+    }
+
+    func updateCurrentTimeSlider() {
+        let currentTimeSeconds = CMTimeGetSeconds(player.currentTime())
+        let durationSeconds = CMTimeGetSeconds(player.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1))
+
+        let percentage = currentTimeSeconds / durationSeconds
+        currentTimeSlider.value = Float(percentage)
     }
 
     // MARK: - Animations
