@@ -28,6 +28,7 @@ class TrackDetailView: UIView {
     @IBOutlet private weak var volumeSlider: UISlider!
 
     weak var delegate: TrackMovingDelegate?
+    weak var tabBarDelegate: MainTabBarControllerDelegate?
 
     private let player: AVPlayer = {
         let avPlayer = AVPlayer()
@@ -83,7 +84,8 @@ private extension TrackDetailView {
     // MARK: - @IBAction
 
     @IBAction func drugDownButtonTapped(_ sender: UIButton) {
-        removeFromSuperview()
+        tabBarDelegate?.minimizedTrackDetailController()
+        //removeFromSuperview()
     }
 
     @IBAction func currentTimeSliderValueChanged(_ sender: UISlider) {
