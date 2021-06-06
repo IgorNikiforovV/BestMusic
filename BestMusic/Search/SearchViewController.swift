@@ -22,14 +22,13 @@ class SearchViewController: UIViewController, SearchDisplayLogic {
     @IBOutlet private weak var tableView: UITableView!
     private let searchController = UISearchController(searchResultsController: nil)
     private lazy var footerView = FooterView()
+    weak var tabBarDelegate: MainTabBarControllerDelegate?
 
     private var searchViewModel = SearchViewModel(cells: [])
     private var timer: Timer?
 
     // MARK: Object lifecycle
 
-
-    
     // MARK: Setup
     
     private func setup() {
@@ -95,11 +94,7 @@ extension SearchViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cellViewModel = searchViewModel.cells[indexPath.item]
-        let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
-        let trackDetailView: TrackDetailView = TrackDetailView.loadFromNib()
-        trackDetailView.set(viewModel: cellViewModel)
-        trackDetailView.delegate = self
-        window?.addSubview(trackDetailView)
+        tabBarDelegate?.maximizedTrackDetailController(viewModel: cellViewModel)
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
