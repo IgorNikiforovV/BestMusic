@@ -18,6 +18,13 @@ class TrackDetailView: UIView {
 
     // MARK: Outlets
 
+    @IBOutlet private weak var miniTrackView: UIView!
+    @IBOutlet private weak var miniTrackImageView: UIImageView!
+    @IBOutlet private weak var miniTrackTitleLabel: UILabel!
+    @IBOutlet private weak var miniPlayPauseButton: UIButton!
+    @IBOutlet private weak var miniGoForwardButton: UIButton!
+
+    @IBOutlet private weak var maximizedStackView: UIStackView!
     @IBOutlet private weak var trackImageView: UIImageView!
     @IBOutlet private weak var currentTimeSlider: UISlider!
     @IBOutlet private weak var currentTimeLabel: UILabel!
@@ -51,14 +58,26 @@ extension TrackDetailView {
     func set(viewModel: SearchViewModel.Cell) {
         trackTitleLabel.text = viewModel.trackName
         authorTitleLabel.text = viewModel.artistName
+        miniTrackTitleLabel.text = viewModel.trackName
 
         playTrack(previewUrl: viewModel.previewUrl)
         observePlayerCurrentTime()
+        playPauseButton.setImage(UIImage(named: "TrackDetai/pause"), for: .normal)
+        miniPlayPauseButton.setImage(UIImage(named: "TrackDetai/pause"), for: .normal)
         let string600 = viewModel.iconUrlString?.replacingOccurrences(of: "100x100", with: "600x600")
         guard let url = URL(string: string600 ?? "") else { return }
+        miniTrackImageView.sd_setImage(with: url, completed: nil)
         trackImageView.sd_setImage(with: url, completed: nil)
 
         monitorStartTime()
+    }
+
+    func setMiniTrackView(_ alpha: CGFloat) {
+        miniTrackView.alpha = alpha
+    }
+
+    func setMaximizedStackView(_ alpha: CGFloat) {
+        maximizedStackView.alpha = alpha
     }
 
 }
@@ -120,10 +139,12 @@ private extension TrackDetailView {
         if player.timeControlStatus == .paused {
             player.play()
             playPauseButton.setImage(UIImage(named: "TrackDetai/pause"), for: .normal)
+            miniPlayPauseButton.setImage(UIImage(named: "TrackDetai/pause"), for: .normal)
             enlageTrackImageView()
         } else {
             player.pause()
             playPauseButton.setImage(UIImage(named: "TrackDetai/play"), for: .normal)
+            miniPlayPauseButton.setImage(UIImage(named: "TrackDetai/play"), for: .normal)
             reduceTrackImageView()
         }
     }
