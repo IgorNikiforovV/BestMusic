@@ -40,29 +40,17 @@
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Ah-m5-Skq">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nZF-VZ-51n">
                                     <rect key="frame" x="286" y="0.0" width="48" height="48"/>
-                                    <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nZF-VZ-51n">
-                                            <rect key="frame" x="14" y="14" width="20" height="20"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="20" id="FIk-7m-tEG"/>
-                                                <constraint firstAttribute="height" constant="20" id="uH4-L8-NKJ"/>
-                                            </constraints>
-                                            <color key="tintColor" red="0.086274509799999996" green="0.086274509799999996" blue="0.086274509799999996" alpha="1" colorSpace="calibratedRGB"/>
-                                            <state key="normal" image="TrackDetai/pause"/>
-                                            <connections>
-                                                <action selector="playPauseButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="RD6-CN-ddX"/>
-                                            </connections>
-                                        </button>
-                                    </subviews>
                                     <constraints>
-                                        <constraint firstItem="nZF-VZ-51n" firstAttribute="top" secondItem="2Ah-m5-Skq" secondAttribute="top" constant="14" id="HGd-ES-KzG"/>
-                                        <constraint firstItem="nZF-VZ-51n" firstAttribute="leading" secondItem="2Ah-m5-Skq" secondAttribute="leading" constant="14" id="nCz-RH-H8a"/>
-                                        <constraint firstAttribute="bottom" secondItem="nZF-VZ-51n" secondAttribute="bottom" constant="14" id="nmp-lh-RP8"/>
-                                        <constraint firstAttribute="trailing" secondItem="nZF-VZ-51n" secondAttribute="trailing" constant="14" id="wc6-qk-ZVL"/>
+                                        <constraint firstAttribute="width" constant="48" id="FIk-7m-tEG"/>
                                     </constraints>
-                                </view>
+                                    <color key="tintColor" red="0.086274509799999996" green="0.086274509799999996" blue="0.086274509799999996" alpha="1" colorSpace="calibratedRGB"/>
+                                    <state key="normal" image="TrackDetai/pause"/>
+                                    <connections>
+                                        <action selector="playPauseButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="RD6-CN-ddX"/>
+                                    </connections>
+                                </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8G9-tg-sRo">
                                     <rect key="frame" x="350" y="0.0" width="48" height="48"/>
                                     <constraints>

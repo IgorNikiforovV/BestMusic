@@ -47,6 +47,8 @@ class TrackDetailView: UIView {
         super.awakeFromNib()
 
         configureTrackImageView()
+        configureMiniPlayPauseButton()
+        setupGesture()
     }
 
 }
@@ -93,6 +95,10 @@ private extension TrackDetailView {
         setTrackImageView()
     }
 
+    func configureMiniPlayPauseButton() {
+        miniPlayPauseButton.imageEdgeInsets = .init(top: 11, left: 11, bottom: 11, right: 11)
+    }
+
     // MARK: - Setup
 
     func setTrackImageView() {
@@ -100,11 +106,90 @@ private extension TrackDetailView {
         trackImageView.transform = CGAffineTransform(scaleX: scale, y: scale)
     }
 
+    func setupGesture() {
+        miniTrackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapMaximized)))
+        miniTrackView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
+        addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handleDismissalPan)))
+    }
+
+    // MARK: - maximized and minimized gesture
+
+    @objc func handleTapMaximized() {
+        print("Tapping to maximized")
+        self.tabBarDelegate?.maximizedTrackDetailController(viewModel: nil)
+    }
+
+    @objc func handlePan(gesture: UIPanGestureRecognizer) {
+        switch gesture.state {
+        case .began:
+            print("began")
+        case .changed:
+            handlePanChanged(gesture: gesture)
+        case .ended:
+            handlePanEnded(gesture: gesture)
+        default:
+            break
+        }
+    }
+
+    func handlePanChanged(gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: self.superview)
+        self.transform = CGAffineTransform(translationX: 0, y: translation.y)
+
+        let newAlpha = 1 + translation.y / 200
+        self.miniTrackView.alpha = newAlpha < 0 ? 0 : newAlpha
+        self.maximizedStackView.alpha = -translation.y / 200
+    }
+
+    func handlePanEnded(gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: self.superview)
+        let velocity = gesture.velocity(in: self.superview)
+
+        UIView.animate(withDuration: 0.5,
+                       delay: 0,
+                       usingSpringWithDamping: 0.7,
+                       initialSpringVelocity: 1,
+                       options: .curveEaseOut,
+                       animations: {
+                        self.transform = .identity
+                        if translation.y < -200 || velocity.y < -500 {
+                            self.tabBarDelegate?.maximizedTrackDetailController(viewModel: nil)
+                        } else {
+                            self.miniTrackView.alpha = 1
+                            self.maximizedStackView.alpha = 0
+                        }
+                       },
+                       completion: nil)
+    }
+
+    @objc func handleDismissalPan(gesture: UIPanGestureRecognizer) {
+        switch gesture.state {
+            case .changed:
+                let translation = gesture.translation(in: self.superview)
+                maximizedStackView.transform = CGAffineTransform(translationX: 0, y: translation.y)
+            case .ended:
+                let transletion = gesture.translation(in: self.superview)
+                UIView.animate(withDuration: 0.5,
+                               delay: 0,
+                               usingSpringWithDamping: 0.7,
+                               initialSpringVelocity: 1,
+                               options: .curveEaseOut,
+                               animations: {
+                                self.maximizedStackView.transform = .identity
+                                if transletion.y > 50 {
+                                    self.tabBarDelegate?.minimizedTrackDetailController()
+                                }
+                               },
+                               completion: nil)
+            default:
+                break
+        }
+    }
+
     // MARK: - @IBAction
 
     @IBAction func drugDownButtonTapped(_ sender: UIButton) {
         tabBarDelegate?.minimizedTrackDetailController()
-        //removeFromSuperview()
     }
 
     @IBAction func currentTimeSliderValueChanged(_ sender: UISlider) {
