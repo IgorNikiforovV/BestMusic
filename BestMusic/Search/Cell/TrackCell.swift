@@ -27,6 +27,7 @@ class TrackCell: UITableViewCell {
     // MARKL: Properties
 
     static let reuseId = "TrackCell"
+    private var cell: SearchViewModel.Cell?
 
     override class func awakeFromNib() {
         super.awakeFromNib()
@@ -38,13 +39,33 @@ class TrackCell: UITableViewCell {
         trackImageView.image = nil
     }
 
+    @IBAction func addTrackAction(_ sender: UIButton) {
+        let defaults = UserDefaults.standard
+        if let savedData = try? NSKeyedArchiver.archivedData(withRootObject: cell,
+                                                             requiringSecureCoding: false) {
+            print("Успешно")
+            defaults.set(savedData, forKey: "tracks")
+        }
+    }
+
+    @IBAction func showInfoAction(_ sender: UIButton) {
+        let defaults = UserDefaults.standard
+        if let savedData = defaults.object(forKey: "tracks") as? Data {
+            if let decodedTracks = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(savedData) as? SearchViewModel.Cell {
+                print("\(decodedTracks.trackName)")
+            }
+        }
+    }
+    
 }
 
 // MARKL: - Public methods
 
 extension TrackCell {
 
-    func set(_ viewModel: TrackCellViewModel) {
+    func set(_ viewModel: SearchViewModel.Cell) {
+        cell = viewModel
+
         trackNameLabel.text = viewModel.trackName
         artistNameLabel.text = viewModel.artistName
         collectionNameLabel.text = viewModel.collectionName
